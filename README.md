@@ -1,5 +1,7 @@
 # extrator-docs-br
 
+[![CI](https://github.com/arthurpenedo/extrator-docs-br/actions/workflows/ci.yml/badge.svg)](https://github.com/arthurpenedo/extrator-docs-br/actions/workflows/ci.yml)
+
 Extrai campos de **boleto, NF-e e comprovante Pix** com regex + validação de dígito verificador, e mede o acerto por campo.
 
 ## O problema
