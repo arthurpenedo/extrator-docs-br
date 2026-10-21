@@ -28,8 +28,19 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("pasta")
     g.add_argument("--por-tipo", type=int, default=3)
 
+    d = sub.add_parser("demo", help="gera a página HTML de demo (documentos sintéticos e o que foi extraído)")
+    d.add_argument("--saida", default="site/index.html")
+    d.add_argument("--por-tipo", type=int, default=2)
+
     a = p.parse_args(argv)
-    if a.cmd == "extrair":
+    if a.cmd == "demo":
+        from .demo import gerar_html
+
+        destino = Path(a.saida)
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(gerar_html(a.por_tipo), encoding="utf-8")
+        print(destino)
+    elif a.cmd == "extrair":
         texto = sys.stdin.read() if a.arquivo == "-" else Path(a.arquivo).read_text(encoding="utf-8")
         print(json.dumps(extrair(texto, a.tipo, validar=not a.sem_validar), ensure_ascii=False, indent=2))
     elif a.cmd == "benchmark":

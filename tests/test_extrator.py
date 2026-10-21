@@ -100,3 +100,18 @@ def test_cli_extrair_e_benchmark(tmp_path, capsys):
     saida = tmp_path / "b.md"
     assert main(["benchmark", "--por-tipo", "10", "--saida", str(saida)]) == 0
     assert "Total" in saida.read_text(encoding="utf-8")
+
+
+def test_demo_html_mostra_documentos_e_acerto():
+    from extrator_docs_br.demo import gerar_html
+
+    html = gerar_html(por_tipo=1)
+    assert html.startswith("<!doctype html>")
+    assert html.count("class='doc'") == 3  # um boleto, uma NF-e, um Pix
+    assert "2400/2400" in html and "certo" in html
+
+
+def test_cli_demo_grava_arquivo(tmp_path):
+    saida = tmp_path / "site" / "index.html"
+    assert main(["demo", "--saida", str(saida), "--por-tipo", "1"]) == 0
+    assert "extrator-docs-br: demo" in saida.read_text(encoding="utf-8")

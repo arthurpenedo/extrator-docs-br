@@ -23,6 +23,9 @@ Corpus sintético de 600 documentos (200 por tipo, semente 42), `extrator-docs-b
 
 Toda a diferença está no CNPJ do beneficiário do boleto (48,5% → 100%).
 
+## Página de demo
+`extrator-docs-br demo --saida site/index.html` gera uma página estática com documentos sintéticos de cada tipo ao lado dos campos extraídos e do gabarito. O workflow `.github/workflows/pagina.yml` publica no GitHub Pages a cada push na `main` (ativar uma vez em Settings → Pages → Source = GitHub Actions). Link: https://arthurpenedo.github.io/extrator-docs-br/ (vale depois da primeira execução).
+
 ## Como rodar
 ```
 pip install -e ".[dev]"
