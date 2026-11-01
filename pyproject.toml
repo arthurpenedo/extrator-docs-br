@@ -13,7 +13,7 @@ authors = [{ name = "Arthur Penedo" }]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]
 extrator-docs-br = "extrator_docs_br.cli:main"

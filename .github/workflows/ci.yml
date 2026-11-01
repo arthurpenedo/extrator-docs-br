@@ -13,6 +13,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e ".[dev]"
+      - run: ruff check . --select E,F,I --ignore E501
       - run: pytest -q
       - name: Benchmark
         run: extrator-docs-br benchmark --saida benchmark.md
