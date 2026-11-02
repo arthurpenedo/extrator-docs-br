@@ -117,7 +117,7 @@ def dados_linha_digitavel(texto: str, referencia: date = date(2026, 1, 1)) -> tu
     fator = int(n[33:37])
     centavos = int(n[37:47])
     valor = f"{centavos // 100}.{centavos % 100:02d}"
-    candidatas = [BASE_FATOR + timedelta(days=fator + 9000 * k) for k in range(0, 4)]
+    candidatas = [BASE_FATOR + timedelta(days=fator + 9000 * k) for k in range(4)]
     return valor, min(candidatas, key=lambda d: abs((d - referencia).days))
 
 
