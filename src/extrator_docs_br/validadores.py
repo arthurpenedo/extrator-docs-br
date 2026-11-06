@@ -15,7 +15,7 @@ def _dv_cnpj(base: str) -> str:
     pesos = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
     digitos = ""
     for _ in range(2):
-        soma = sum(int(d) * p for d, p in zip(base, pesos))
+        soma = sum(int(d) * p for d, p in zip(base, pesos, strict=True))
         resto = soma % 11
         dv = 0 if resto < 2 else 11 - resto
         digitos += str(dv)
@@ -38,7 +38,7 @@ def completar_cnpj(base12: str) -> str:
 def _dv_cpf(base: str) -> str:
     digitos = ""
     for tamanho in (9, 10):
-        soma = sum(int(d) * p for d, p in zip(base, range(tamanho + 1, 1, -1)))
+        soma = sum(int(d) * p for d, p in zip(base, range(tamanho + 1, 1, -1), strict=True))
         dv = (soma * 10 % 11) % 10
         digitos += str(dv)
         base += str(dv)
