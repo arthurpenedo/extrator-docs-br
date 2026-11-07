@@ -115,3 +115,22 @@ def test_cli_demo_grava_arquivo(tmp_path):
     saida = tmp_path / "site" / "index.html"
     assert main(["demo", "--saida", str(saida), "--por-tipo", "1"]) == 0
     assert "extrator-docs-br: demo" in saida.read_text(encoding="utf-8")
+
+
+def test_cli_gerar_grava_texto_e_gabarito(tmp_path):
+    pasta = tmp_path / "docs"
+    assert main(["gerar", str(pasta), "--por-tipo", "2"]) == 0
+    textos = sorted(pasta.glob("*.txt"))
+    assert len(textos) == 6  # 2 por tipo
+    for t in textos:
+        gabarito = json.loads(t.with_suffix(".gabarito.json").read_text(encoding="utf-8"))
+        assert extrair(t.read_text(encoding="utf-8")) == gabarito
+
+
+def test_cli_extrair_le_da_entrada_padrao(monkeypatch, capsys):
+    import io
+
+    doc = gerar_boleto(random.Random(3))
+    monkeypatch.setattr("sys.stdin", io.StringIO(doc.texto))
+    assert main(["extrair", "-"]) == 0
+    assert json.loads(capsys.readouterr().out) == doc.gabarito
