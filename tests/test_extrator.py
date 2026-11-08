@@ -134,3 +134,29 @@ def test_cli_extrair_le_da_entrada_padrao(monkeypatch, capsys):
     monkeypatch.setattr("sys.stdin", io.StringIO(doc.texto))
     assert main(["extrair", "-"]) == 0
     assert json.loads(capsys.readouterr().out) == doc.gabarito
+
+
+def test_data_impossivel_vira_none():
+    from extrator_docs_br.extrator import _data
+
+    assert _data("Vencimento: 31/02/2026", "vencimento") is None
+    assert _data("Vencimento: 28/02/2026", "vencimento") == "2026-02-28"
+    assert _data("sem data nenhuma", "vencimento") is None
+
+
+def test_doc_no_segmento_pula_cnpj_invalido_e_pega_o_valido():
+    from extrator_docs_br.extrator import RE_CNPJ, _doc_no_segmento
+    from extrator_docs_br.validadores import cnpj_valido
+
+    texto = "Emitente: 11.111.111/1111-10 e 11.222.333/0001-81"
+    assert cnpj_valido("11222333000181")
+    assert _doc_no_segmento(texto, "emitente", RE_CNPJ, cnpj_valido, True) == "11222333000181"
+    assert _doc_no_segmento("Emitente: 11.111.111/1111-10", "emitente", RE_CNPJ, cnpj_valido, True) is None
+    assert _doc_no_segmento("sem rótulo", "emitente", RE_CNPJ, cnpj_valido, True) is None
+
+
+def test_linha_digitavel_com_tamanho_errado_e_invalida():
+    from extrator_docs_br.validadores import linha_digitavel_valida
+
+    assert linha_digitavel_valida("12345") is False
+    assert linha_digitavel_valida("") is False
