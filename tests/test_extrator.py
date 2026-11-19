@@ -160,3 +160,11 @@ def test_linha_digitavel_com_tamanho_errado_e_invalida():
 
     assert linha_digitavel_valida("12345") is False
     assert linha_digitavel_valida("") is False
+
+
+def test_cpf_e_cnpj_nao_saem_de_dentro_de_numero_maior():
+    from extrator_docs_br.extrator import RE_CNPJ, RE_CPF
+
+    assert RE_CPF.findall("ref 9529.982.247-250 x") == []
+    assert RE_CNPJ.findall("1111.222.333/0001-8123") == []
+    assert RE_CPF.findall("CPF 529.982.247-25.") == ["529.982.247-25"]

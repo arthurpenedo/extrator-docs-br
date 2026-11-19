@@ -19,8 +19,8 @@ from .validadores import (
     so_digitos,
 )
 
-RE_CNPJ = re.compile(r"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}")
-RE_CPF = re.compile(r"\d{3}\.\d{3}\.\d{3}-\d{2}")
+RE_CNPJ = re.compile(r"(?<!\d)\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}(?!\d)")
+RE_CPF = re.compile(r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)")
 RE_LINHA = re.compile(r"\d{5}\.?\d{5} \d{5}\.?\d{6} \d{5}\.?\d{6} \d \d{14}|(?<!\d)\d{47}(?!\d)")
 RE_CHAVE = re.compile(r"(?<!\d)(?:\d{4} ){10}\d{4}(?!\d)|(?<!\d)\d{44}(?!\d)")
 RE_DATA = r"(\d{2}[/-]\d{2}[/-]\d{4})"
