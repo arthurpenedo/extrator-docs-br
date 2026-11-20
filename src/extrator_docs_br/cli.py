@@ -41,7 +41,18 @@ def main(argv: list[str] | None = None) -> int:
         destino.write_text(gerar_html(a.por_tipo), encoding="utf-8")
         print(destino)
     elif a.cmd == "extrair":
-        texto = sys.stdin.read() if a.arquivo == "-" else Path(a.arquivo).read_text(encoding="utf-8")
+        if a.arquivo == "-":
+            texto = sys.stdin.read()
+        else:
+            try:
+                bruto = Path(a.arquivo).read_bytes()
+            except OSError as e:
+                print(f"Não consegui abrir {a.arquivo}: {e}", file=sys.stderr)
+                return 2
+            try:
+                texto = bruto.decode("utf-8-sig")
+            except UnicodeDecodeError:
+                texto = bruto.decode("cp1252", errors="replace")  # arquivo salvo no Windows em ANSI
         print(json.dumps(extrair(texto, a.tipo, validar=not a.sem_validar), ensure_ascii=False, indent=2))
     elif a.cmd == "benchmark":
         corpus = gerar_corpus(a.por_tipo, a.semente)

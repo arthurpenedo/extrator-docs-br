@@ -168,3 +168,12 @@ def test_cpf_e_cnpj_nao_saem_de_dentro_de_numero_maior():
     assert RE_CPF.findall("ref 9529.982.247-250 x") == []
     assert RE_CNPJ.findall("1111.222.333/0001-8123") == []
     assert RE_CPF.findall("CPF 529.982.247-25.") == ["529.982.247-25"]
+
+
+def test_cli_extrair_arquivo_ausente_e_ansi(tmp_path, capsys):
+    assert main(["extrair", str(tmp_path / "nao-existe.txt"), "--tipo", "pix"]) == 2
+    assert "Não consegui abrir" in capsys.readouterr().err
+    arq = tmp_path / "ansi.txt"
+    arq.write_bytes("Pagamento à vista, João\n".encode("cp1252"))
+    assert main(["extrair", str(arq), "--tipo", "pix"]) == 0
+    assert capsys.readouterr().out.strip().startswith("{")
