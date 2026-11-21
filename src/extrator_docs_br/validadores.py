@@ -6,6 +6,12 @@ from datetime import date, timedelta
 
 BASE_FATOR = date(1997, 10, 7)
 
+# Códigos de UF do IBGE (os 2 primeiros dígitos da chave de acesso da NF-e).
+CODIGOS_UF = {
+    "11", "12", "13", "14", "15", "16", "17", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+    "31", "32", "33", "35", "41", "42", "43", "50", "51", "52", "53",
+}
+
 
 def so_digitos(texto: str) -> str:
     return re.sub(r"\D", "", texto)
@@ -64,7 +70,7 @@ def _mod11_chave(base43: str) -> str:
 
 def chave_nfe_valida(texto: str) -> bool:
     n = so_digitos(texto)
-    return len(n) == 44 and n[43] == _mod11_chave(n[:43])
+    return len(n) == 44 and n[:2] in CODIGOS_UF and n[43] == _mod11_chave(n[:43])
 
 
 def completar_chave_nfe(base43: str) -> str:

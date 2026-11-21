@@ -35,6 +35,11 @@ def test_chave_nfe_dv():
     assert not chave_nfe_valida(errada)
 
 
+def test_chave_nfe_com_uf_inexistente_e_invalida_mesmo_com_dv_certo():
+    assert not chave_nfe_valida("0" * 44)  # DV bate (tudo zero), mas UF 00 não existe
+    assert not chave_nfe_valida(completar_chave_nfe("99" + "0" * 41))
+
+
 def test_linha_digitavel_exemplo_gerado():
     doc = gerar_boleto(random.Random(1))
     linha = doc.gabarito["linha_digitavel"]
