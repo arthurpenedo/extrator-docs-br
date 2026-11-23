@@ -33,6 +33,9 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--por-tipo", type=int, default=2)
 
     a = p.parse_args(argv)
+    if a.cmd in ("benchmark", "gerar", "demo") and a.por_tipo < 1:
+        print("Erro: --por-tipo precisa ser 1 ou mais.", file=sys.stderr)
+        return 2
     if a.cmd == "demo":
         from .demo import gerar_html
 
