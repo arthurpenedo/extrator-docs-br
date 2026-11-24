@@ -67,7 +67,11 @@ def main(argv: list[str] | None = None) -> int:
             Path(a.saida).write_text(cab + tabela + "\n", encoding="utf-8")
     elif a.cmd == "gerar":
         pasta = Path(a.pasta)
-        pasta.mkdir(parents=True, exist_ok=True)
+        try:
+            pasta.mkdir(parents=True, exist_ok=True)
+        except OSError as e:  # o caminho já existe como arquivo, por exemplo
+            print(f"Não consegui criar a pasta {a.pasta}: {e}", file=sys.stderr)
+            return 2
         for i, doc in enumerate(gerar_corpus(a.por_tipo, 7)):
             (pasta / f"{doc.tipo}-{i:02d}.txt").write_text(doc.texto, encoding="utf-8")
             (pasta / f"{doc.tipo}-{i:02d}.gabarito.json").write_text(

@@ -182,3 +182,10 @@ def test_cli_extrair_arquivo_ausente_e_ansi(tmp_path, capsys):
     arq.write_bytes("Pagamento à vista, João\n".encode("cp1252"))
     assert main(["extrair", str(arq), "--tipo", "pix"]) == 0
     assert capsys.readouterr().out.strip().startswith("{")
+
+
+def test_cli_gerar_em_caminho_que_e_arquivo_da_erro_claro(tmp_path, capsys):
+    arquivo = tmp_path / "docs"
+    arquivo.write_text("x", encoding="utf-8")
+    assert main(["gerar", str(arquivo)]) == 2
+    assert "Não consegui criar a pasta" in capsys.readouterr().err
