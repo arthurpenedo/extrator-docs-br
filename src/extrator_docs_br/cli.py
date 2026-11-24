@@ -63,6 +63,7 @@ def main(argv: list[str] | None = None) -> int:
         cab = f"Corpus sintético: {len(corpus)} documentos ({a.por_tipo} por tipo), semente {a.semente}.\n\n"
         print(cab + tabela)
         if a.saida:
+            Path(a.saida).parent.mkdir(parents=True, exist_ok=True)  # `--saida docs/tabela.md` sem a pasta
             Path(a.saida).write_text(cab + tabela + "\n", encoding="utf-8")
     elif a.cmd == "gerar":
         pasta = Path(a.pasta)
