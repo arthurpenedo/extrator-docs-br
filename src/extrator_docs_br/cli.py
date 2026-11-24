@@ -36,6 +36,9 @@ def main(argv: list[str] | None = None) -> int:
     if a.cmd in ("benchmark", "gerar", "demo") and a.por_tipo < 1:
         print("Erro: --por-tipo precisa ser 1 ou mais.", file=sys.stderr)
         return 2
+    if a.cmd in ("demo", "benchmark") and a.saida and Path(a.saida).is_dir():
+        print(f"Erro: --saida é uma pasta, passe um arquivo: {a.saida}", file=sys.stderr)
+        return 2
     if a.cmd == "demo":
         from .demo import gerar_html
 

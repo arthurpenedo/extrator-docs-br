@@ -189,3 +189,9 @@ def test_cli_gerar_em_caminho_que_e_arquivo_da_erro_claro(tmp_path, capsys):
     arquivo.write_text("x", encoding="utf-8")
     assert main(["gerar", str(arquivo)]) == 2
     assert "Não consegui criar a pasta" in capsys.readouterr().err
+
+
+def test_cli_saida_que_e_pasta_devolve_2(tmp_path, capsys):
+    assert main(["demo", "--saida", str(tmp_path)]) == 2
+    assert main(["benchmark", "--por-tipo", "1", "--saida", str(tmp_path)]) == 2
+    assert capsys.readouterr().err.count("--saida é uma pasta") == 2
