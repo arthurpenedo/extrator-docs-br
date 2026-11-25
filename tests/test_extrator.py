@@ -195,3 +195,11 @@ def test_cli_saida_que_e_pasta_devolve_2(tmp_path, capsys):
     assert main(["demo", "--saida", str(tmp_path)]) == 2
     assert main(["benchmark", "--por-tipo", "1", "--saida", str(tmp_path)]) == 2
     assert capsys.readouterr().err.count("--saida é uma pasta") == 2
+
+
+def test_cli_saida_dentro_de_arquivo_devolve_2_sem_traceback(tmp_path, capsys):
+    arq = tmp_path / "arq.txt"
+    arq.write_text("x", encoding="utf-8")
+    assert main(["demo", "--saida", str(arq / "i.html")]) == 2
+    assert main(["benchmark", "--por-tipo", "1", "--saida", str(arq / "b.md")]) == 2
+    assert capsys.readouterr().err.count("--saida passa por um arquivo") == 2

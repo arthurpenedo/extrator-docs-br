@@ -39,6 +39,9 @@ def main(argv: list[str] | None = None) -> int:
     if a.cmd in ("demo", "benchmark") and a.saida and Path(a.saida).is_dir():
         print(f"Erro: --saida é uma pasta, passe um arquivo: {a.saida}", file=sys.stderr)
         return 2
+    if a.cmd in ("demo", "benchmark") and a.saida and any(p.is_file() for p in Path(a.saida).parents):
+        print(f"Erro: --saida passa por um arquivo, passe um caminho dentro de uma pasta: {a.saida}", file=sys.stderr)
+        return 2
     if a.cmd == "demo":
         from .demo import gerar_html
 
