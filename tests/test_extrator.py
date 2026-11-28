@@ -141,6 +141,16 @@ def test_cli_extrair_le_da_entrada_padrao(monkeypatch, capsys):
     assert json.loads(capsys.readouterr().out) == doc.gabarito
 
 
+def test_cli_extrair_entrada_padrao_em_ansi_nao_da_traceback(monkeypatch, capsys):
+    import io
+
+    doc = gerar_boleto(random.Random(3))
+    ansi = ("Beneficiário: Não é UTF-8\n" + doc.texto).encode("cp1252")
+    monkeypatch.setattr("sys.stdin", io.TextIOWrapper(io.BytesIO(ansi), encoding="utf-8"))
+    assert main(["extrair", "-"]) == 0
+    assert json.loads(capsys.readouterr().out)  # saiu JSON, sem UnicodeDecodeError
+
+
 def test_data_impossivel_vira_none():
     from extrator_docs_br.extrator import _data
 

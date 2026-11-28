@@ -10,6 +10,13 @@ from .extrator import extrair
 from .gerador import gerar_corpus
 
 
+def _decodificar(bruto: bytes) -> str:
+    try:
+        return bruto.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return bruto.decode("cp1252", errors="replace")  # texto salvo no Windows em ANSI
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="extrator-docs-br")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -51,17 +58,17 @@ def main(argv: list[str] | None = None) -> int:
         print(destino)
     elif a.cmd == "extrair":
         if a.arquivo == "-":
-            texto = sys.stdin.read()
+            if hasattr(sys.stdin, "buffer"):  # bytes: mesmo tratamento do arquivo, sem UnicodeDecodeError
+                texto = _decodificar(sys.stdin.buffer.read())
+            else:
+                texto = sys.stdin.read()
         else:
             try:
                 bruto = Path(a.arquivo).read_bytes()
             except OSError as e:
                 print(f"Não consegui abrir {a.arquivo}: {e}", file=sys.stderr)
                 return 2
-            try:
-                texto = bruto.decode("utf-8-sig")
-            except UnicodeDecodeError:
-                texto = bruto.decode("cp1252", errors="replace")  # arquivo salvo no Windows em ANSI
+            texto = _decodificar(bruto)
         print(json.dumps(extrair(texto, a.tipo, validar=not a.sem_validar), ensure_ascii=False, indent=2))
     elif a.cmd == "benchmark":
         corpus = gerar_corpus(a.por_tipo, a.semente)
